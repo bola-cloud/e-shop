@@ -27,20 +27,20 @@
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Touhidurabir\\Filterable\\": "packages/laravel-filterable/src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
         },
-        "files":[
-            "app/Http/Helpers.php"
+        "files": [
+            "app/Helpers.php"
         ]
     },
     "scripts": {
