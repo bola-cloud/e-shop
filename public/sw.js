@@ -1,9 +1,9 @@
-var cacheName = 'hello-pwa';
+var cacheName = 'laravel-pwa-v1';
 var filesToCache = [
   '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/main.js'
+  '/frontend/css/style.css',
+  '/frontend/js/active.js',
+  '/frontend/js/jquery.min.js'
 ];
 
 /* Start the service worker and cache all of the app's content */
