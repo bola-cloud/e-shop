@@ -29,8 +29,33 @@ class HomeController extends Controller
      */
 
 
-    public function index(){
-        return view('user.index');
+    public function index()
+    {
+        // Fetch banners
+        $banners = Banner::where('status', 'active')->orderBy('id', 'DESC')->limit(3)->get();
+
+        // Fetch product lists
+        $product_lists = Product::with(['locationPrices'])
+            ->where('status', 'active')
+            ->orderBy('id', 'DESC')
+            ->limit(9)
+            ->get();
+
+        // Fetch featured products
+        $featured = Product::with(['cat_info', 'locationPrices'])
+            ->where('is_featured', 1)
+            ->where('status', 'active')
+            ->orderBy('id', 'DESC')
+            ->limit(1)
+            ->get();
+
+        // Fetch categories
+        $category_lists = Category::where('status', 'active')->where('is_parent', 1)->limit(3)->get();
+
+        // Fetch posts
+        $posts = Post::where('status', 'active')->orderBy('id', 'DESC')->limit(3)->get();
+
+        return view('frontend.index', compact('banners', 'product_lists', 'featured', 'category_lists', 'posts'));
     }
 
     public function profile(){
@@ -220,11 +245,11 @@ class HomeController extends Controller
             'new_password' => ['required'],
             'new_confirm_password' => ['same:new_password'],
         ]);
-   
+
         User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-   
+
         return redirect()->route('user')->with('success','Password successfully changed');
     }
 
-    
+
 }

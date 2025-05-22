@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Brand;
 
 use Illuminate\Support\Str;
+use App\Helpers\LocationHelper;
+
 
 class ProductController extends Controller
 {
@@ -55,29 +57,36 @@ class ProductController extends Controller
             'is_featured' => 'sometimes|in:1',
             'status' => 'required|in:active,inactive',
             'condition' => 'required|in:default,new,hot',
-            'price' => 'required|numeric',
             'discount' => 'nullable|numeric',
+            'location_prices' => 'required|array',
+            'location_prices.ARE' => 'nullable|numeric',
+            'location_prices.KSA' => 'nullable|numeric',
+            'location_prices.UAE' => 'nullable|numeric',
         ]);
 
         $slug = generateUniqueSlug($request->title, Product::class);
         $validatedData['slug'] = $slug;
         $validatedData['is_featured'] = $request->input('is_featured', 0);
 
-        if ($request->has('size')) {
-            $validatedData['size'] = implode(',', $request->input('size'));
-        } else {
-            $validatedData['size'] = '';
-        }
+        $validatedData['size'] = $request->has('size') ? implode(',', $request->input('size')) : '';
 
+        // Price column is now optional or removed
         $product = Product::create($validatedData);
 
-        $message = $product
-            ? 'Product Successfully added'
-            : 'Please try again!!';
+        if ($request->has('location_prices')) {
+            foreach ($request->input('location_prices') as $country => $price) {
+                if ($price !== null) {
+                    $product->locationPrices()->create([
+                        'country_code' => strtoupper($country),
+                        'price' => $price,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('product.index')->with(
             $product ? 'success' : 'error',
-            $message
+            $product ? 'Product Successfully added' : 'Please try again!!'
         );
     }
 
@@ -132,27 +141,35 @@ class ProductController extends Controller
             'brand_id' => 'nullable|exists:brands,id',
             'status' => 'required|in:active,inactive',
             'condition' => 'required|in:default,new,hot',
-            'price' => 'required|numeric',
             'discount' => 'nullable|numeric',
+            'location_prices' => 'required|array',
+            'location_prices.ARE' => 'nullable|numeric',
+            'location_prices.KSA' => 'nullable|numeric',
+            'location_prices.UAE' => 'nullable|numeric',
         ]);
 
         $validatedData['is_featured'] = $request->input('is_featured', 0);
-
-        if ($request->has('size')) {
-            $validatedData['size'] = implode(',', $request->input('size'));
-        } else {
-            $validatedData['size'] = '';
-        }
+        $validatedData['size'] = $request->has('size') ? implode(',', $request->input('size')) : '';
 
         $status = $product->update($validatedData);
 
-        $message = $status
-            ? 'Product Successfully updated'
-            : 'Please try again!!';
+        // تحديث أو إنشاء الأسعار حسب الدولة
+        if ($request->has('location_prices')) {
+            foreach ($request->input('location_prices') as $country => $price) {
+                if ($price !== null) {
+                    $product->locationPrices()->updateOrCreate(
+                        ['country_code' => strtoupper($country)],
+                        ['price' => $price]
+                    );
+                } else {
+                    $product->locationPrices()->where('country_code', strtoupper($country))->delete();
+                }
+            }
+        }
 
         return redirect()->route('product.index')->with(
             $status ? 'success' : 'error',
-            $message
+            $status ? 'Product Successfully updated' : 'Please try again!!'
         );
     }
 
@@ -165,15 +182,16 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        $status = $product->delete();
 
-        $message = $status
-            ? 'Product successfully deleted'
-            : 'Error while deleting product';
+        // حذف الأسعار المرتبطة قبل حذف المنتج
+        $product->locationPrices()->delete();
+
+        $status = $product->delete();
 
         return redirect()->route('product.index')->with(
             $status ? 'success' : 'error',
-            $message
+            $status ? 'Product successfully deleted' : 'Error while deleting product'
         );
     }
+
 }

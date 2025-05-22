@@ -46,14 +46,14 @@ class Product extends Model
         return $this->hasOne(Brand::class,'id','brand_id');
     }
 
-    public function prices()
+    public function locationPrices()
     {
         return $this->hasMany(ProductPrice::class);
     }
 
-    public function priceForLocation($location)
+    public function getPriceForLocation($countryCode)
     {
-        return $this->prices()->where('location', $location)->first()->price ?? $this->price;
+        return $this->locationPrices()->where('country_code', $countryCode)->first()->price ?? $this->price;
     }
 
 }

@@ -34,7 +34,7 @@
 
         <div class="form-group">
           <label for="is_featured">Is Featured</label><br>
-          <input type="checkbox" name='is_featured' id='is_featured' value='1' checked> Yes                        
+          <input type="checkbox" name='is_featured' id='is_featured' value='1' checked> Yes
         </div>
               {{-- {{$categories}} --}}
 
@@ -58,13 +58,25 @@
           </select>
         </div>
 
+        <!-- Add inside your form under the price input -->
         <div class="form-group">
-          <label for="price" class="col-form-label">Price(NRS) <span class="text-danger">*</span></label>
-          <input id="price" type="number" name="price" placeholder="Enter price"  value="{{old('price')}}" class="form-control">
-          @error('price')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
+            <label for="location_prices" class="col-form-label">Prices by Location</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="price_are">Price (ARE)</label>
+                    <input type="number" step="0.01" name="location_prices[ARE]" class="form-control" value="{{ old('location_prices.ARE') }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="price_ksa">Price (KSA)</label>
+                    <input type="number" step="0.01" name="location_prices[KSA]" class="form-control" value="{{ old('location_prices.KSA') }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="price_uae">Price (UAE)</label>
+                    <input type="number" step="0.01" name="location_prices[UAE]" class="form-control" value="{{ old('location_prices.UAE') }}">
+                </div>
+            </div>
         </div>
+
 
         <div class="form-group">
           <label for="discount" class="col-form-label">Discount(%)</label>
@@ -128,7 +140,7 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-        
+
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
           <select name="status" class="form-control">

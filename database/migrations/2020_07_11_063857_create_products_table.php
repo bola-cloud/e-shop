@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('size')->default('M')->nullable();
             $table->enum('condition',['default','new','hot'])->default('default');
             $table->enum('status',['active','inactive'])->default('inactive');
-            $table->float('price');
+            $table->float('price')->nullable();
             $table->float('discount')->nullabale();
             $table->boolean('is_featured')->deault(false);
             $table->unsignedBigInteger('cat_id')->nullable();

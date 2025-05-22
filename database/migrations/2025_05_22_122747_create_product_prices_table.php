@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('product_prices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('location'); // e.g., country code like 'US', 'EG', 'SA'
+            $table->string('country_code'); // e.g., ARE, KSA, UAE
             $table->decimal('price', 10, 2);
             $table->timestamps();
+
+            $table->unique(['product_id', 'country_code']); // Ensure unique price per country per product
         });
     }
 
