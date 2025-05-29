@@ -8,6 +8,10 @@ use App\Models\Order;
 use App\Models\ProductReview;
 use App\Models\PostComment;
 use App\Rules\MatchOldPassword;
+use App\Models\Banner;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Post;
 use Hash;
 
 class HomeController extends Controller
