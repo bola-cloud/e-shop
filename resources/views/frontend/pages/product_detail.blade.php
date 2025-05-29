@@ -503,7 +503,7 @@
 		float: right;
 		padding-left: 2px;
 		cursor: pointer;
-		color: #F7941D;
+		color: #007bff;
 		font-size: 16px;
 		margin-top: 5px;
 		}

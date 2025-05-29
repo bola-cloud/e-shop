@@ -260,7 +260,7 @@
             margin-bottom: 0 !important;
         }
         .list li:hover {
-            background: #F7941D !important;
+            background: #007bff !important;
             color: white !important;
         }
         .form-select .nice-select::after {
