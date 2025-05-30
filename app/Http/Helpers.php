@@ -74,7 +74,7 @@ class Helper
 
     public static function postTagList($option = 'all')
     {
-        if ($option == 'all') {
+        if ($option = 'all') {
             return PostTag::orderBy('id', 'desc')->get();
         }
         return PostTag::has('posts')->orderBy('id', 'desc')->get();
@@ -82,7 +82,7 @@ class Helper
 
     public static function postCategoryList($option = "all")
     {
-        if ($option == 'all') {
+        if ($option = 'all') {
             return PostCategory::orderBy('id', 'DESC')->get();
         }
         return PostCategory::has('posts')->orderBy('id', 'DESC')->get();
